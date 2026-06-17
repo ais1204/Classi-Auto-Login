@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Classi 自動ログイン",
+  "version": "1.1",
+  "description": "Classiのログイン画面でGoogleログインを選択し、保存したアカウントで自動ログインする拡張機能",
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://id.classi.jp/*"
+      ],
+      "js": [
+        "classi.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://accounts.google.com/*"
+      ],
+      "js": [
+        "google.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Classi 自動ログイン 設定"
+  }
+}
