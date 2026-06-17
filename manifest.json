@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Classi 自動ログイン",
-  "version": "1.1",
+  "version": "1.4",
   "description": "Classiのログイン画面でGoogleログインを選択し、保存したアカウントで自動ログインする拡張機能",
   "permissions": [
     "storage"

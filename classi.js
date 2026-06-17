@@ -2,6 +2,12 @@
 (() => {
   let clicked = false;
 
+  // このページ(id.classi.jp)にいる＝Classiにログインする意思が明確。
+  // 以降のGoogle画面（自動／手動どちらで進んでも）で自動入力を許可するためのフラグを立てる。
+  // これにより、手動で「別のアカウントを使用」を押してメール/パスワード画面に進んだ場合でも
+  // 自動入力が有効になる（有効期間10分）。
+  chrome.storage.local.set({ classiFlow: Date.now() });
+
   // 「Google」と「ログイン/sign in」を含む短いボタン・リンクを探す。
   function findGoogleButton() {
     const candidates = document.querySelectorAll('button, a, [role="button"]');
