@@ -2,7 +2,15 @@
 
 Classiのログイン画面を開くと、自動で「Googleでログイン」→アカウント選択→（必要なら）パスワード入力まで行います。
 
-## インストール
+## インストール（おすすめ：Chrome ウェブストア）
+
+[**Chrome ウェブストアからインストール**](https://chromewebstore.google.com/detail/classi-%E8%87%AA%E5%8B%95%E3%83%AD%E3%82%B0%E3%82%A4%E3%83%B3%EF%BC%88%E9%9D%9E%E5%85%AC%E5%BC%8F%EF%BC%89/hmhhoblegdnanmleddglfoehapjlkhic)
+
+ボタンを押して「Chromeに追加」するだけです（限定公開のため、上記リンクからのみインストールできます）。
+
+## インストール（手動・開発者向け）
+
+ソースから直接読み込む場合:
 
 1. Chromeで `chrome://extensions` を開く
 2. 右上の **デベロッパーモード** をオン
