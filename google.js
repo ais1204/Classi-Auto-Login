@@ -8,7 +8,7 @@
 // 設定（メール・パスワード）はポップアップから chrome.storage.local に保存される。
 // 安全策: 「直近にClassiから来た」または「ページに Classi 表記がある」場合のみ動作する。
 (() => {
-  const DEBUG = true; // ポップアップ窓の DevTools(右クリック→検証) で動作ログを確認できる
+  const DEBUG = false; // 配布版はオフ。動作ログを見たい時は true にする
   const log = (...a) => DEBUG && console.log("[Classi自動ログイン]", ...a);
 
   const TTL = 10 * 60 * 1000; // Classiフローとみなす有効時間（10分）
@@ -141,28 +141,63 @@
     return false;
   }
 
+  // 「次へ」等の送信ボタンを押す（idヒント優先、無ければテキストで探す）
+  function clickNext(idHint) {
+    const byId = idHint && document.querySelector("#" + idHint);
+    if (byId) {
+      realClick(byId.querySelector("button") || byId);
+      return true;
+    }
+    const b = [...document.querySelectorAll('button, [role="button"]')].find((x) =>
+      /^(次へ|続行|next|continue)$/i.test((x.textContent || "").trim())
+    );
+    if (b) {
+      realClick(b);
+      return true;
+    }
+    return false;
+  }
+
+  // メール/ID入力欄を探す（type=email が基本だが、仕様変更に備えて複数条件で）
+  function findIdentifierInput() {
+    return document.querySelector(
+      'input[type="email"]:not([aria-hidden="true"]),' +
+        "input#identifierId," +
+        'input[name="identifier"]:not([aria-hidden="true"]),' +
+        'input[autocomplete="username"]:not([aria-hidden="true"])'
+    );
+  }
+
+  function findPasswordInput() {
+    return document.querySelector(
+      'input[type="password"]:not([aria-hidden="true"]),' +
+        'input[name="Passwd"]:not([aria-hidden="true"]),' +
+        'input[autocomplete="current-password"]:not([aria-hidden="true"])'
+    );
+  }
+
   function fillEmail() {
     if (!cfg.email) return false;
-    const input = document.querySelector('input[type="email"]:not([aria-hidden="true"])');
+    const input = findIdentifierInput();
     if (!input) return false;
     log("メールアドレスを入力");
+    if (input.focus) input.focus();
     setNativeValue(input, cfg.email);
-    const next = document.querySelector("#identifierNext button, #identifierNext, button[jsname]");
-    if (next) realClick(next);
+    clickNext("identifierNext");
     return true;
   }
 
   function fillPassword() {
-    const input = document.querySelector('input[type="password"]:not([aria-hidden="true"])');
+    const input = findPasswordInput();
     if (!input) return false;
     if (!cfg.password) {
       log("パスワード欄あり / 保存パスワード未設定 → 手入力に任せる");
       return false;
     }
     log("パスワードを入力");
+    if (input.focus) input.focus();
     setNativeValue(input, cfg.password);
-    const next = document.querySelector("#passwordNext button, #passwordNext, button[jsname]");
-    if (next) realClick(next);
+    clickNext("passwordNext");
     return true;
   }
 
@@ -181,8 +216,8 @@
   function step() {
     if (acted) return true;
 
-    // パスワード欄があればパスワード処理を最優先
-    if (document.querySelector('input[type="password"]:not([aria-hidden="true"])')) {
+    // パスワード入力画面（最優先。パスワード欄があればメール欄より先に処理）
+    if (findPasswordInput()) {
       if (fillPassword()) {
         acted = true;
         return true;
@@ -190,18 +225,18 @@
       return false; // 欄はあるが未設定 → 手入力に任せて以後何もしない
     }
 
-    // アカウント選択画面
-    if (isChooser()) {
-      return handleChooser();
-    }
-
-    // メール入力画面
-    if (document.querySelector('input[type="email"]:not([aria-hidden="true"])')) {
+    // メール/ID入力画面（入力欄がある = identifierページ）
+    if (findIdentifierInput()) {
       if (fillEmail()) {
         acted = true;
         return true;
       }
       return false;
+    }
+
+    // アカウント選択画面
+    if (isChooser()) {
+      return handleChooser();
     }
 
     // 同意画面

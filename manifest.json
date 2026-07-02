@@ -1,11 +1,17 @@
 {
   "manifest_version": 3,
-  "name": "Classi 自動ログイン",
-  "version": "1.4",
-  "description": "Classiのログイン画面でGoogleログインを選択し、保存したアカウントで自動ログインする拡張機能",
+  "name": "Classi 自動ログイン（非公式）",
+  "version": "1.6",
+  "description": "Classiのログイン画面でGoogleログインを選択し、保存したアカウントで自動ログインします。Classi社とは無関係の非公式ツールです。",
   "permissions": [
     "storage"
   ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "background": {
     "service_worker": "background.js"
   },
@@ -32,6 +38,12 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Classi 自動ログイン 設定"
+    "default_title": "Classi 自動ログイン 設定",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   }
 }
